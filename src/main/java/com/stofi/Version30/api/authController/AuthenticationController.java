@@ -1,5 +1,8 @@
 package com.stofi.Version30.api.authController;
 
+import com.stofi.Version30.api.authModel.RegistrationBody;
+import com.stofi.Version30.exception.UserAlreadyExistsException;
+import com.stofi.Version30.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
