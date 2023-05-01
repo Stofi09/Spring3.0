@@ -1,5 +1,7 @@
 package com.stofi.Version30.api.authController;
 
+import com.stofi.Version30.api.authModel.LoginBody;
+import com.stofi.Version30.api.authModel.LoginResponse;
 import com.stofi.Version30.api.authModel.RegistrationBody;
 import com.stofi.Version30.exception.UserAlreadyExistsException;
 import com.stofi.Version30.service.UserService;
@@ -36,6 +38,18 @@ public class AuthenticationController {
             return ResponseEntity.ok().build();
         } catch (UserAlreadyExistsException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody LoginBody loginBody) {
+        String jwt = userService.loginUser(loginBody);
+        if (jwt == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } else {
+            LoginResponse response = new LoginResponse();
+            response.setJwt(jwt);
+            return ResponseEntity.ok(response);
         }
     }
 }
