@@ -3,6 +3,7 @@ package game;
 import game.builder.MapBuilder;
 import game.builder.WallBuilder;
 import game.model.Orient;
+import game.model.Position;
 import game.rule.CheckSpace;
 
 import javax.swing.*;
@@ -18,7 +19,7 @@ public class Board extends JComponent implements KeyListener {
     int testBoxY;
 
     List<PositionedImage> map;
-    List<PositionedImage> walls;
+    List<PositionedImage> wall;
 
     private String playerUrl = "wanderer-java/img/hero-down.png";
 
@@ -30,6 +31,7 @@ public class Board extends JComponent implements KeyListener {
         setPreferredSize(new Dimension(720, 720));
         setVisible(true);
         map = new ArrayList<>();
+        wall =  new ArrayList<>();
     }
 
     @Override
@@ -41,7 +43,7 @@ public class Board extends JComponent implements KeyListener {
         //       PositionedImage image = new PositionedImage("wanderer-java/img/wall.png", 300, 300); // where do I want to display this
 
         MapBuilder.buildMap(map,graphics);
-        WallBuilder.buildWall(walls,graphics);
+        WallBuilder.buildWall(wall,graphics);
         PositionedImage heroImage = new PositionedImage(playerUrl, testBoxX, testBoxY); // where do I want to display this
         heroImage.draw(graphics);
 
@@ -57,6 +59,7 @@ public class Board extends JComponent implements KeyListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.pack();
+
         // Here is how you can add a key event listener
         // The board object will be notified when hitting any key
         // with the system calling one of the below 3 methods
@@ -79,16 +82,20 @@ public class Board extends JComponent implements KeyListener {
     // But actually we can use just this one for our goals here
     @Override
     public void keyReleased(KeyEvent e) {
+        Position newPosition;
+
         // When the up or down keys hit, we change the position of our box
         if (e.getKeyCode() == KeyEvent.VK_UP) {
-            if(CheckSpace.isOutside(testBoxY - MapBuilder.pixelSize)){
+            newPosition = new Position(testBoxX,testBoxY - MapBuilder.pixelSize);
+            if(CheckSpace.checkNextStep(testBoxY - MapBuilder.pixelSize,newPosition, wall)){
                 playerUrl = Orient.DOWN.getUrl();
             }else {
                 testBoxY -= MapBuilder.pixelSize;
                 playerUrl = Orient.UP.getUrl();
             }
         } else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-            if(CheckSpace.isOutside(testBoxY + MapBuilder.pixelSize)){
+            newPosition = new Position(testBoxX,testBoxY + MapBuilder.pixelSize);
+            if(CheckSpace.checkNextStep(testBoxY + MapBuilder.pixelSize,newPosition, wall)){
                 playerUrl = Orient.UP.getUrl();
             }else {
                 testBoxY += MapBuilder.pixelSize;
@@ -97,14 +104,16 @@ public class Board extends JComponent implements KeyListener {
         }
 
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            if(CheckSpace.isOutside(testBoxX - MapBuilder.pixelSize)){
+            newPosition = new Position(testBoxX -  MapBuilder.pixelSize,testBoxY);
+            if(CheckSpace.checkNextStep(testBoxX - MapBuilder.pixelSize,newPosition, wall)){
                 playerUrl = Orient.RIGHT.getUrl();
             }else {
                 testBoxX -= MapBuilder.pixelSize;
                 playerUrl = Orient.LEFT.getUrl();
             }
         } else if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            if(CheckSpace.isOutside(testBoxX + MapBuilder.pixelSize)){
+            newPosition = new Position(testBoxX +  MapBuilder.pixelSize,testBoxY);
+            if(CheckSpace.checkNextStep(testBoxX + MapBuilder.pixelSize,newPosition, wall)){
                 playerUrl = Orient.LEFT.getUrl();
             }else {
                 testBoxX += MapBuilder.pixelSize;

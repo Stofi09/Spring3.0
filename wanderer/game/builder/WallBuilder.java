@@ -31,7 +31,7 @@ public class WallBuilder {
         }
     }
     public static void buildWall(List<PositionedImage> walls, Graphics graphics){
-        walls =  new ArrayList<>();
+
         for (int i = 1; i< 3; i++){
             horizontal3(walls,graphics, i);
             vertical3(walls,graphics, i);
