@@ -28,5 +28,7 @@ public class PositionedImage {
         }
 
     }
-
+    public void yellStatus(){
+        System.out.println("X: "+ this.posX+ " || y: " + this.posY);
+    }
 }

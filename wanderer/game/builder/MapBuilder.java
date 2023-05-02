@@ -11,7 +11,6 @@ public class MapBuilder {
     public static final int pixelSize = 72;
 
     public static void buildMap(List<PositionedImage> map, Graphics graphics){
-        map = new ArrayList<>();
         int tempPosX = 0;
         int tempPosY = 0;
         for(int i = 0; i < 7; i++){
