@@ -35,7 +35,7 @@ public class Board extends JComponent implements KeyListener {
     public Board() {
         Position pos = new Position(0,0);
         hero = new Hero(pos,"wanderer-java/img/hero-down.png");
-        Position pos2= new Position(432,432);
+        Position pos2= new Position(432+(mapLevel*2*72),432+(mapLevel*2*72));
         boss = new Boss(pos2,"wanderer-java/img/boss.png",2);
         // set the size of your draw board
         setPreferredSize(new Dimension(720, 720));
@@ -131,12 +131,18 @@ public class Board extends JComponent implements KeyListener {
             else died(c1,c2);
         }
     }
+
+    // This should set the char's position when new map starts
+    private static void nextMap(int mapLevel){
+
+    }
     private static void died(Character c1, Character c2){
         c2.getPosition().setX(600 + numOfDead * 10);
         c2.getPosition().setY(600 + numOfDead * 10);
         if(c1 instanceof Hero){
             c1.levelUp();
             mapLevel++;
+            nextMap(mapLevel);
             // new Map
         }else{
             // End the game
