@@ -1,0 +1,7 @@
+1. Add skeletons
+2. When boss dead new map.
+3. Add level to Board which should be passed to NPc movement instead of hero.getLevel()
+4. Add diff. maps
+5. Add inventory
+    I. Key to the boss
+    II. eq. to the hero which can alter the stats.
