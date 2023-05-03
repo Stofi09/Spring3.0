@@ -4,6 +4,10 @@ import game.builder.MapBuilder;
 import game.builder.WallBuilder;
 import game.model.Orient;
 import game.model.Position;
+import game.model.charactrer.Boss;
+import game.model.charactrer.Character;
+import game.model.charactrer.Hero;
+import game.rule.Battle;
 import game.rule.CheckSpace;
 
 import javax.swing.*;
@@ -15,18 +19,16 @@ import java.util.List;
 
 public class Board extends JComponent implements KeyListener {
 
-    int testBoxX;
-    int testBoxY;
-
+    static Hero hero;
+    static Boss boss;
     List<PositionedImage> map;
     List<PositionedImage> wall;
 
-    private String playerUrl = "wanderer-java/img/hero-down.png";
-
     public Board() {
-        testBoxX = 0;
-        testBoxY = 0;
-
+        Position pos = new Position(0,0);
+        hero = new Hero(pos,"wanderer-java/img/hero-down.png");
+        Position pos2= new Position(432,432);
+        boss = new Boss(pos2,"wanderer-java/img/boss.png",2);
         // set the size of your draw board
         setPreferredSize(new Dimension(720, 720));
         setVisible(true);
@@ -44,9 +46,10 @@ public class Board extends JComponent implements KeyListener {
 
         MapBuilder.buildMap(map,graphics);
         WallBuilder.buildWall(wall,graphics);
-        PositionedImage heroImage = new PositionedImage(playerUrl, testBoxX, testBoxY); // where do I want to display this
+        PositionedImage heroImage = new PositionedImage(hero.getUrl(), hero.getPosition().getX(), hero.getPosition().getY()); // where do I want to display this
         heroImage.draw(graphics);
-
+        PositionedImage badGuy = new PositionedImage(boss.getUrl(), boss.getPosition().getX(),boss.getPosition().getY());
+        badGuy.draw(graphics);
         // Each Png is 72X72
         // First the map, then the wall, then the player
     }
@@ -86,43 +89,65 @@ public class Board extends JComponent implements KeyListener {
 
         // When the up or down keys hit, we change the position of our box
         if (e.getKeyCode() == KeyEvent.VK_UP) {
-            newPosition = new Position(testBoxX,testBoxY - MapBuilder.pixelSize);
-            if(CheckSpace.checkNextStep(testBoxY - MapBuilder.pixelSize,newPosition, wall)){
-                playerUrl = Orient.DOWN.getUrl();
+            newPosition = new Position(hero.getPosition().getX(),hero.getPosition().getY() - MapBuilder.pixelSize);
+            if(CheckSpace.checkNextStep(hero.getPosition().getY() - MapBuilder.pixelSize,newPosition, wall)){
+                hero.setUrl(Orient.DOWN.getUrl());
             }else {
-                testBoxY -= MapBuilder.pixelSize;
-                playerUrl = Orient.UP.getUrl();
+                hero.getPosition().setMinusY(MapBuilder.pixelSize);
+
+                hero.setUrl(Orient.UP.getUrl());
             }
         } else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-            newPosition = new Position(testBoxX,testBoxY + MapBuilder.pixelSize);
-            if(CheckSpace.checkNextStep(testBoxY + MapBuilder.pixelSize,newPosition, wall)){
-                playerUrl = Orient.UP.getUrl();
+            newPosition = new Position(hero.getPosition().getX(),hero.getPosition().getY() + MapBuilder.pixelSize);
+            if(CheckSpace.checkNextStep(hero.getPosition().getY() + MapBuilder.pixelSize,newPosition, wall)){
+               hero.setUrl(Orient.UP.getUrl()) ;
             }else {
-                testBoxY += MapBuilder.pixelSize;
-                playerUrl = Orient.DOWN.getUrl();
+                hero.getPosition().setPlusY(MapBuilder.pixelSize);
+                hero.setUrl(Orient.DOWN.getUrl());
             }
         }
 
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            newPosition = new Position(testBoxX -  MapBuilder.pixelSize,testBoxY);
-            if(CheckSpace.checkNextStep(testBoxX - MapBuilder.pixelSize,newPosition, wall)){
-                playerUrl = Orient.RIGHT.getUrl();
+            newPosition = new Position(hero.getPosition().getX() -  MapBuilder.pixelSize,hero.getPosition().getY());
+            if(CheckSpace.checkNextStep(hero.getPosition().getX() - MapBuilder.pixelSize,newPosition, wall)){
+                hero.setUrl( Orient.RIGHT.getUrl());
             }else {
-                testBoxX -= MapBuilder.pixelSize;
-                playerUrl = Orient.LEFT.getUrl();
+                hero.getPosition().setMinusX(MapBuilder.pixelSize);
+                hero.setUrl(Orient.LEFT.getUrl());
+
             }
         } else if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            newPosition = new Position(testBoxX +  MapBuilder.pixelSize,testBoxY);
-            if(CheckSpace.checkNextStep(testBoxX + MapBuilder.pixelSize,newPosition, wall)){
-                playerUrl = Orient.LEFT.getUrl();
+            newPosition = new Position(hero.getPosition().getX() +  MapBuilder.pixelSize,hero.getPosition().getY());
+            if(CheckSpace.checkNextStep(hero.getPosition().getX() + MapBuilder.pixelSize,newPosition, wall)){
+                hero.setUrl(Orient.LEFT.getUrl());
             }else {
-                testBoxX += MapBuilder.pixelSize;
-                playerUrl = Orient.RIGHT.getUrl();
+                hero.getPosition().setPlusX(MapBuilder.pixelSize);
+                hero.setUrl(Orient.RIGHT.getUrl());
             }
         }
+        if(e.getKeyCode() == KeyEvent.VK_SPACE && CheckSpace.isSamePosForFight(hero,boss)){
+            System.out.println("sikerult");
+            fight(hero,boss);
+        }
+
         // and redraw to have a new picture with the new coordinates
         repaint();
 
     }
-
+    private static void fight(Character c1, Character c2){
+        boolean result = Battle.battle(c1,c2);
+        if(result){
+            if(c1.isDead()){
+                c1.getPosition().setX(600);
+                c1.getPosition().setY(600);
+                c2.levelUp();
+            }else{
+                c2.getPosition().setX(600);
+                c2.getPosition().setY(600);
+                c1.levelUp();
+            }
+        }
+        System.out.println("hero: " + hero.toString());
+        System.out.println("hero: " + boss.toString());
+    }
 }

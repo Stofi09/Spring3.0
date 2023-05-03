@@ -27,8 +27,28 @@ public class Position {
         return x == position.x && y == position.y;
     }
 
+    public void setPlusX(int x) {
+        this.x = x + this.x;
+    }
+    public void setMinusX(int x) {
+        this.x = this.x - x;
+    }
+    public void setPlusY(int y) {
+        this.y = this.y + y;
+    }
+    public void setMinusY(int y) {
+        this.y = this.y - y;
+    }
     @Override
     public int hashCode() {
         return Objects.hash(x, y);
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 }

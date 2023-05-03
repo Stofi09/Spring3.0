@@ -12,4 +12,17 @@ public class Boss extends Character{
         this.DP = level/2 * chance + chance / 2;
         this.SP = level * chance + level;
     }
+
+    @Override
+    public String toString() {
+        return "Boss{" +
+                "url='" + url + '\'' +
+                ", position=" + position +
+                ", HP=" + HP +
+                ", DP=" + DP +
+                ", SP=" + SP +
+                ", level=" + level +
+                ", isDead=" + isDead +
+                '}';
+    }
 }

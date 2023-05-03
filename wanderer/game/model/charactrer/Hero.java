@@ -14,4 +14,16 @@ public class Hero extends Character {
         this.SP = 5 + chance;
     }
 
+    @Override
+    public String toString() {
+        return "Hero{" +
+                "url='" + url + '\'' +
+                ", position=" + position +
+                ", HP=" + HP +
+                ", DP=" + DP +
+                ", SP=" + SP +
+                ", level=" + level +
+                ", isDead=" + isDead +
+                '}';
+    }
 }
