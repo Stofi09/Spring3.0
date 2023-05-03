@@ -1,7 +1,9 @@
 package game;
 
 import game.builder.MapBuilder;
+import game.builder.ScoreBoard;
 import game.builder.WallBuilder;
+import game.model.Movement;
 import game.model.Orient;
 import game.model.Position;
 import game.model.charactrer.Boss;
@@ -22,8 +24,9 @@ public class Board extends JComponent implements KeyListener {
     static Hero hero;
     static Boss boss;
     List<PositionedImage> map;
-    List<PositionedImage> wall;
-
+    static List<PositionedImage> wall;
+    private static int numOfDead = 0;
+    private static int stepCounter = 0;
     public Board() {
         Position pos = new Position(0,0);
         hero = new Hero(pos,"wanderer-java/img/hero-down.png");
@@ -48,8 +51,12 @@ public class Board extends JComponent implements KeyListener {
         WallBuilder.buildWall(wall,graphics);
         PositionedImage heroImage = new PositionedImage(hero.getUrl(), hero.getPosition().getX(), hero.getPosition().getY()); // where do I want to display this
         heroImage.draw(graphics);
+
         PositionedImage badGuy = new PositionedImage(boss.getUrl(), boss.getPosition().getX(),boss.getPosition().getY());
         badGuy.draw(graphics);
+
+       // graphics.drawString("Proba", 600, 600);
+        ScoreBoard.showResult(graphics,hero);
         // Each Png is 72X72
         // First the map, then the wall, then the player
     }
@@ -89,47 +96,24 @@ public class Board extends JComponent implements KeyListener {
 
         // When the up or down keys hit, we change the position of our box
         if (e.getKeyCode() == KeyEvent.VK_UP) {
-            newPosition = new Position(hero.getPosition().getX(),hero.getPosition().getY() - MapBuilder.pixelSize);
-            if(CheckSpace.checkNextStep(hero.getPosition().getY() - MapBuilder.pixelSize,newPosition, wall)){
-                hero.setUrl(Orient.DOWN.getUrl());
-            }else {
-                hero.getPosition().setMinusY(MapBuilder.pixelSize);
-
-                hero.setUrl(Orient.UP.getUrl());
-            }
+            Movement.moveUp(hero,wall);
         } else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-            newPosition = new Position(hero.getPosition().getX(),hero.getPosition().getY() + MapBuilder.pixelSize);
-            if(CheckSpace.checkNextStep(hero.getPosition().getY() + MapBuilder.pixelSize,newPosition, wall)){
-               hero.setUrl(Orient.UP.getUrl()) ;
-            }else {
-                hero.getPosition().setPlusY(MapBuilder.pixelSize);
-                hero.setUrl(Orient.DOWN.getUrl());
-            }
+            Movement.moveDown(hero,wall);
         }
-
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            newPosition = new Position(hero.getPosition().getX() -  MapBuilder.pixelSize,hero.getPosition().getY());
-            if(CheckSpace.checkNextStep(hero.getPosition().getX() - MapBuilder.pixelSize,newPosition, wall)){
-                hero.setUrl( Orient.RIGHT.getUrl());
-            }else {
-                hero.getPosition().setMinusX(MapBuilder.pixelSize);
-                hero.setUrl(Orient.LEFT.getUrl());
-
-            }
+            Movement.moveLeft(hero,wall);
         } else if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            newPosition = new Position(hero.getPosition().getX() +  MapBuilder.pixelSize,hero.getPosition().getY());
-            if(CheckSpace.checkNextStep(hero.getPosition().getX() + MapBuilder.pixelSize,newPosition, wall)){
-                hero.setUrl(Orient.LEFT.getUrl());
-            }else {
-                hero.getPosition().setPlusX(MapBuilder.pixelSize);
-                hero.setUrl(Orient.RIGHT.getUrl());
-            }
+            Movement.moveRight(hero,wall);
         }
         if(e.getKeyCode() == KeyEvent.VK_SPACE && CheckSpace.isSamePosForFight(hero,boss)){
-            System.out.println("sikerult");
             fight(hero,boss);
         }
-
+        if(stepCounter % 2 == 0){
+            System.out.println(stepCounter);
+            int chance = (int) (Math.random() * ( 5 - 1 ))+1;
+            NPCStep(chance,hero.getLevel(),boss);
+        }
+        stepCounter++;
         // and redraw to have a new picture with the new coordinates
         repaint();
 
@@ -137,17 +121,25 @@ public class Board extends JComponent implements KeyListener {
     private static void fight(Character c1, Character c2){
         boolean result = Battle.battle(c1,c2);
         if(result){
-            if(c1.isDead()){
-                c1.getPosition().setX(600);
-                c1.getPosition().setY(600);
-                c2.levelUp();
-            }else{
-                c2.getPosition().setX(600);
-                c2.getPosition().setY(600);
-                c1.levelUp();
-            }
+            if(c1.isDead())died(c2,c1);
+            else died(c1,c2);
         }
-        System.out.println("hero: " + hero.toString());
-        System.out.println("hero: " + boss.toString());
+    }
+    private static void died(Character c1, Character c2){
+        c2.getPosition().setX(600 + numOfDead * 10);
+        c2.getPosition().setY(600 + numOfDead * 10);
+        c1.levelUp();
+        numOfDead++;
+    }
+
+    private void NPCStep(int num, int level, Character character){
+        for(int i = 0; i <= level; i++){
+            switch (num) {
+                case 1 -> Movement.moveUp(character, wall);
+                case 2 -> Movement.moveDown(character, wall);
+                case 3 -> Movement.moveRight(character, wall);
+                case 4 -> Movement.moveLeft(character, wall);
+            }
+    }
     }
 }

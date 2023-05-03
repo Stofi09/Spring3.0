@@ -80,6 +80,7 @@ public abstract class Character {
         this.DP = this.DP + dpD6;
         int spD6 = (int) (Math.random() * ( 6 -1))+1 ;
         this.SP = this.SP + spD6;
+        this.level++;
         System.out.println("this char levelled up: " + this.getUrl());
     }
 }
