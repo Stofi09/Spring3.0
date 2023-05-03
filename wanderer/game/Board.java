@@ -9,6 +9,7 @@ import game.model.Position;
 import game.model.charactrer.Boss;
 import game.model.charactrer.Character;
 import game.model.charactrer.Hero;
+import game.model.charactrer.Skeleton;
 import game.rule.Battle;
 import game.rule.CheckSpace;
 
@@ -27,6 +28,10 @@ public class Board extends JComponent implements KeyListener {
     static List<PositionedImage> wall;
     private static int numOfDead = 0;
     private static int stepCounter = 0;
+
+    private static int mapLevel = 0;
+
+    private List<Skeleton> horde;
     public Board() {
         Position pos = new Position(0,0);
         hero = new Hero(pos,"wanderer-java/img/hero-down.png");
@@ -37,6 +42,7 @@ public class Board extends JComponent implements KeyListener {
         setVisible(true);
         map = new ArrayList<>();
         wall =  new ArrayList<>();
+        horde = new ArrayList<>();
     }
 
     @Override
@@ -47,7 +53,7 @@ public class Board extends JComponent implements KeyListener {
         // you can create and draw an image using the class below e.g.
         //       PositionedImage image = new PositionedImage("wanderer-java/img/wall.png", 300, 300); // where do I want to display this
 
-        MapBuilder.buildMap(map,graphics);
+        MapBuilder.buildMap(map,graphics,mapLevel);
         WallBuilder.buildWall(wall,graphics);
         PositionedImage heroImage = new PositionedImage(hero.getUrl(), hero.getPosition().getX(), hero.getPosition().getY()); // where do I want to display this
         heroImage.draw(graphics);
@@ -96,14 +102,14 @@ public class Board extends JComponent implements KeyListener {
 
         // When the up or down keys hit, we change the position of our box
         if (e.getKeyCode() == KeyEvent.VK_UP) {
-            Movement.moveUp(hero,wall);
+            Movement.moveUp(hero,wall,mapLevel);
         } else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-            Movement.moveDown(hero,wall);
+            Movement.moveDown(hero,wall,mapLevel);
         }
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            Movement.moveLeft(hero,wall);
+            Movement.moveLeft(hero,wall,mapLevel);
         } else if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            Movement.moveRight(hero,wall);
+            Movement.moveRight(hero,wall,mapLevel);
         }
         if(e.getKeyCode() == KeyEvent.VK_SPACE && CheckSpace.isSamePosForFight(hero,boss)){
             fight(hero,boss);
@@ -111,7 +117,7 @@ public class Board extends JComponent implements KeyListener {
         if(stepCounter % 2 == 0){
             System.out.println(stepCounter);
             int chance = (int) (Math.random() * ( 5 - 1 ))+1;
-            NPCStep(chance,hero.getLevel(),boss);
+        //    NPCStep(chance,hero.getLevel(),boss);
         }
         stepCounter++;
         // and redraw to have a new picture with the new coordinates
@@ -128,17 +134,24 @@ public class Board extends JComponent implements KeyListener {
     private static void died(Character c1, Character c2){
         c2.getPosition().setX(600 + numOfDead * 10);
         c2.getPosition().setY(600 + numOfDead * 10);
-        c1.levelUp();
+        if(c1 instanceof Hero){
+            c1.levelUp();
+            mapLevel++;
+            // new Map
+        }else{
+            // End the game
+           System.exit(0);
+        }
         numOfDead++;
     }
 
     private void NPCStep(int num, int level, Character character){
         for(int i = 0; i <= level; i++){
             switch (num) {
-                case 1 -> Movement.moveUp(character, wall);
-                case 2 -> Movement.moveDown(character, wall);
-                case 3 -> Movement.moveRight(character, wall);
-                case 4 -> Movement.moveLeft(character, wall);
+                case 1 -> Movement.moveUp(character, wall,mapLevel);
+                case 2 -> Movement.moveDown(character, wall,mapLevel);
+                case 3 -> Movement.moveRight(character,wall ,mapLevel);
+                case 4 -> Movement.moveLeft(character, wall,mapLevel);
             }
     }
     }

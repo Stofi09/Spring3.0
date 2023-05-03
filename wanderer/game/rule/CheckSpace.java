@@ -8,8 +8,8 @@ import java.util.List;
 
 public class CheckSpace {
 
-    private static boolean isOutside(int num){
-        return !(num >= 0 && num <= 432);
+    private static boolean isOutside(int num, int mapLevel){
+        return !(num >= 0 && num <= (432 +(mapLevel*2*72)));
     }
 
     private static boolean isSamePos(Position position , List<PositionedImage> wall){
@@ -21,7 +21,7 @@ public class CheckSpace {
     public static boolean isSamePosForFight(Character char1, Character char2){
         return char1.getPosition().equals(char2.getPosition());
     }
-    public static boolean checkNextStep(int num, Position position , List<PositionedImage> wall){
-        return isOutside(num) || isSamePos(position,wall);
+    public static boolean checkNextStep(int num, Position position , List<PositionedImage> wall, int mapLevel){
+        return isOutside(num, mapLevel) || isSamePos(position,wall);
     }
 }
