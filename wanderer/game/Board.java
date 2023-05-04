@@ -123,7 +123,7 @@ public class Board extends JComponent implements KeyListener {
         if(stepCounter % 2 == 0){
             System.out.println(stepCounter);
             int chance = (int) (Math.random() * ( 5 - 1 ))+1;
-            NPCStep(chance,hero.getLevel(),boss);
+            NPCStep(chance,mapLevel,boss);
         }
         stepCounter++;
         // and redraw to have a new picture with the new coordinates
@@ -160,6 +160,7 @@ public class Board extends JComponent implements KeyListener {
     }
 
     private void NPCStep(int num, int level, Character character){
+        System.out.println("Level: "+ level);
         for(int i = 0; i <= level; i++){
             switch (num) {
                 case 1 -> Movement.moveUp(character, wall,mapLevel);
