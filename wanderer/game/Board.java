@@ -130,8 +130,9 @@ public class Board extends JComponent implements KeyListener {
     }
 
     private static void died(Character c1, Character c2){
-        c2.getPosition().setX(600 + numOfDead * 10);
-        c2.getPosition().setY(600 + numOfDead * 10);
+        int variable  = 72*7 + mapLevel * 72 + 200;
+        c2.getPosition().setX(variable + numOfDead * 10);
+        c2.getPosition().setY(variable + numOfDead * 10);
         if(c1 instanceof Hero){
             c1.levelUp();
             if(c2 instanceof Boss){
