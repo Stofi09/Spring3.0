@@ -3,9 +3,7 @@ package game;
 import game.builder.CharLoader;
 import game.builder.MapBuilder;
 import game.builder.ScoreBoard;
-import game.builder.WallBuilder;
 import game.model.Movement;
-import game.model.Orient;
 import game.model.Position;
 import game.model.charactrer.Boss;
 import game.model.charactrer.Character;
@@ -50,18 +48,9 @@ public class Board extends JComponent implements KeyListener {
     @Override
     public void paint(Graphics graphics) {
         super.paint(graphics);
-        //     graphics.fillRect(testBoxX, testBoxY, 100, 100); // that is the size
-        // here you have a 720x720 canvas
-        // you can create and draw an image using the class below e.g.
-        //       PositionedImage image = new PositionedImage("wanderer-java/img/wall.png", 300, 300); // where do I want to display this
-
         MapBuilder.buildMap(map,wall,graphics,mapLevel);
         CharLoader.charLoader(hero,boss,graphics,horde,mapLevel);
-
-        // graphics.drawString("Proba", 600, 600);
         ScoreBoard.showResult(graphics,hero);
-        // Each Png is 72X72
-        // First the map, then the wall, then the player
     }
 
     public static void main(String[] args) {
