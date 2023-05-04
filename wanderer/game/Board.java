@@ -50,7 +50,7 @@ public class Board extends JComponent implements KeyListener {
         super.paint(graphics);
         MapBuilder.buildMap(map,wall,graphics,mapLevel);
         CharLoader.charLoader(hero,boss,graphics,horde,mapLevel);
-        ScoreBoard.showResult(graphics,hero);
+        ScoreBoard.showResult(graphics,hero,mapLevel);
     }
 
     public static void main(String[] args) {
