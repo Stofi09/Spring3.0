@@ -45,15 +45,16 @@ public class CharLoader {
         }
 
         public static void nextMapCharLoader(Character hero, Character boss, List<Skeleton> horde, int mapLevel){
+                int variable = mapLevel*2-1;
                 hero.getPosition().setX(0);
                 hero.getPosition().setY(0);
-                boss.getPosition().setX((7 + mapLevel*2-1)*72);
-                boss.getPosition().setY((7 + mapLevel*2-1)*72);
-                horde.get(0).getPosition().setX(((7 + mapLevel*2-1)*72)-72);
-                horde.get(0).getPosition().setY(((7 + mapLevel*2-1)*72));
-                horde.get(1).getPosition().setX(((7 + mapLevel*2-1)*72));
-                horde.get(1).getPosition().setY(((7 + mapLevel*2-1)*72)-72);
-                horde.get(2).getPosition().setX(((7 + mapLevel*2-1)*72)-72);
-                horde.get(2).getPosition().setY(((7 + mapLevel*2-1)*72)-72);
+                boss.getPosition().setX((7+ variable)*72);
+                boss.getPosition().setY((7+ variable)*72);
+                horde.get(0).getPosition().setX(((7+ variable)*72)-72);
+                horde.get(0).getPosition().setY(((7+ variable)*72));
+                horde.get(1).getPosition().setX(((7+ variable)*72));
+                horde.get(1).getPosition().setY(((7+ variable)*72)-72);
+                horde.get(2).getPosition().setX(((7+ variable)*72)-72);
+                horde.get(2).getPosition().setY(((7 + variable)*72)-72);
         }
 }

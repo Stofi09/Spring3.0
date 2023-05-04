@@ -110,14 +110,13 @@ public class Board extends JComponent implements KeyListener {
 
         }
         if(stepCounter % 2 == 0){
-            System.out.println(stepCounter);
             NPCStep(mapLevel,boss);
             for(Skeleton s : horde){
                 NPCStep(mapLevel,s);
             }
         }
         stepCounter++;
-        System.out.println(hero.getPosition().toString());
+        System.out.println(horde.size());
         // and redraw to have a new picture with the new coordinates
         repaint();
 
@@ -136,8 +135,8 @@ public class Board extends JComponent implements KeyListener {
         if(c1 instanceof Hero){
             c1.levelUp();
             if(c2 instanceof Boss){
-                mapLevel++;
-                CharLoader.nextMapCharLoader(hero, boss,  horde, mapLevel);
+                mapLevel = mapLevel + 1;
+                CharLoader.nextMapCharLoader(hero, boss,horde, mapLevel);
             }
         }else{
             // End the game
@@ -147,15 +146,17 @@ public class Board extends JComponent implements KeyListener {
     }
 
     private void NPCStep(int level, Character character){
-        int chance = (int) (Math.random() * ( 5 - 1 ))+1;
-        System.out.println("Level: "+ level);
-        for(int i = 0; i <= level; i++){
-            switch (chance) {
-                case 1 -> Movement.moveUp(character, wall,mapLevel);
-                case 2 -> Movement.moveDown(character, wall,mapLevel);
-                case 3 -> Movement.moveRight(character,wall ,mapLevel);
-                case 4 -> Movement.moveLeft(character, wall,mapLevel);
+        if(!CheckSpace.isSamePosForFight(hero,character)){
+            int chance = (int) (Math.random() * ( 5 - 1 ))+1;
+            System.out.println("Level: "+ level);
+            for(int i = 0; i <= level; i++){
+                switch (chance) {
+                    case 1 -> Movement.moveUp(character, wall,mapLevel);
+                    case 2 -> Movement.moveDown(character, wall,mapLevel);
+                    case 3 -> Movement.moveRight(character,wall ,mapLevel);
+                    case 4 -> Movement.moveLeft(character, wall,mapLevel);
+                }
             }
-    }
+        }
     }
 }
