@@ -111,8 +111,10 @@ public class Board extends JComponent implements KeyListener {
         }
         if(stepCounter % 2 == 0){
             System.out.println(stepCounter);
-            int chance = (int) (Math.random() * ( 5 - 1 ))+1;
-        //    NPCStep(chance,mapLevel,boss);
+            NPCStep(mapLevel,boss);
+            for(Skeleton s : horde){
+                NPCStep(mapLevel,s);
+            }
         }
         stepCounter++;
         System.out.println(hero.getPosition().toString());
@@ -144,10 +146,11 @@ public class Board extends JComponent implements KeyListener {
         numOfDead++;
     }
 
-    private void NPCStep(int num, int level, Character character){
+    private void NPCStep(int level, Character character){
+        int chance = (int) (Math.random() * ( 5 - 1 ))+1;
         System.out.println("Level: "+ level);
         for(int i = 0; i <= level; i++){
-            switch (num) {
+            switch (chance) {
                 case 1 -> Movement.moveUp(character, wall,mapLevel);
                 case 2 -> Movement.moveDown(character, wall,mapLevel);
                 case 3 -> Movement.moveRight(character,wall ,mapLevel);
