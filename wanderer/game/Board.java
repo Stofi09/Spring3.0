@@ -55,8 +55,8 @@ public class Board extends JComponent implements KeyListener {
         // you can create and draw an image using the class below e.g.
         //       PositionedImage image = new PositionedImage("wanderer-java/img/wall.png", 300, 300); // where do I want to display this
 
-        MapBuilder.buildMap(map,graphics,mapLevel);
-        WallBuilder.buildWall(wall,graphics);
+        MapBuilder.buildMap(map,wall,graphics,mapLevel);
+       // WallBuilder.buildWall(wall,graphics);
         PositionedImage heroImage = new PositionedImage(hero.getUrl(), hero.getPosition().getX(), hero.getPosition().getY()); // where do I want to display this
         heroImage.draw(graphics);
 
