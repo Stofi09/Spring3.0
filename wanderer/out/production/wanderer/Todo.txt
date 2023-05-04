@@ -3,7 +3,7 @@ DONE__ When boss dead new map.
 DONE__ When hero dies the game is over.
 . When new map the boss is on the wrong tile
 . Finish nextMap() in Border
-. Add level to Board which should be passed to NPc movement instead of hero.getLevel()
+DONE__ Add level to Board which should be passed to NPc movement instead of hero.getLevel()
 . Add diff. maps
 . Add inventory
     I. Key to the boss

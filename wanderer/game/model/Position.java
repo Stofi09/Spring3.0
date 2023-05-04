@@ -48,6 +48,14 @@ public class Position {
         this.x = x;
     }
 
+    @Override
+    public String toString() {
+        return "Position{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
+
     public void setY(int y) {
         this.y = y;
     }

@@ -33,11 +33,11 @@ public class Board extends JComponent implements KeyListener {
 
     private static int mapLevel = 0;
 
-    private List<Skeleton> horde;
+    private static List<Skeleton> horde;
     public Board() {
         Position pos = new Position(0,0);
         hero = new Hero(pos,"wanderer-java/img/hero-down.png");
-        Position pos2= new Position(432+(mapLevel*2*72),432+(mapLevel*2*72));
+        Position pos2= new Position(432+(mapLevel * 72),432+(mapLevel * 72));
         boss = new Boss(pos2,"wanderer-java/img/boss.png",2);
         // set the size of your draw board
         setPreferredSize(new Dimension(720, 720));
@@ -123,9 +123,10 @@ public class Board extends JComponent implements KeyListener {
         if(stepCounter % 2 == 0){
             System.out.println(stepCounter);
             int chance = (int) (Math.random() * ( 5 - 1 ))+1;
-            NPCStep(chance,mapLevel,boss);
+        //    NPCStep(chance,mapLevel,boss);
         }
         stepCounter++;
+        System.out.println(hero.getPosition().toString());
         // and redraw to have a new picture with the new coordinates
         repaint();
 
@@ -138,10 +139,6 @@ public class Board extends JComponent implements KeyListener {
         }
     }
 
-    // This should set the char's position when new map starts
-    private static void nextMap(int mapLevel){
-
-    }
     private static void died(Character c1, Character c2){
         c2.getPosition().setX(600 + numOfDead * 10);
         c2.getPosition().setY(600 + numOfDead * 10);
@@ -149,8 +146,7 @@ public class Board extends JComponent implements KeyListener {
             c1.levelUp();
             if(c2 instanceof Boss){
                 mapLevel++;
-                nextMap(mapLevel);
-                // new Map
+                CharLoader.nextMapCharLoader(hero, boss,  horde, mapLevel);
             }
         }else{
             // End the game
