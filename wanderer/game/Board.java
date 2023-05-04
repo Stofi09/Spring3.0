@@ -1,5 +1,6 @@
 package game;
 
+import game.builder.CharLoader;
 import game.builder.MapBuilder;
 import game.builder.ScoreBoard;
 import game.builder.WallBuilder;
@@ -26,6 +27,7 @@ public class Board extends JComponent implements KeyListener {
     static Boss boss;
     List<PositionedImage> map;
     static List<PositionedImage> wall;
+
     private static int numOfDead = 0;
     private static int stepCounter = 0;
 
@@ -60,8 +62,9 @@ public class Board extends JComponent implements KeyListener {
 
         PositionedImage badGuy = new PositionedImage(boss.getUrl(), boss.getPosition().getX(),boss.getPosition().getY());
         badGuy.draw(graphics);
+        CharLoader.loadSkeletons(horde,mapLevel,graphics);
 
-       // graphics.drawString("Proba", 600, 600);
+        // graphics.drawString("Proba", 600, 600);
         ScoreBoard.showResult(graphics,hero);
         // Each Png is 72X72
         // First the map, then the wall, then the player
@@ -111,13 +114,22 @@ public class Board extends JComponent implements KeyListener {
         } else if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
             Movement.moveRight(hero,wall,mapLevel);
         }
-        if(e.getKeyCode() == KeyEvent.VK_SPACE && CheckSpace.isSamePosForFight(hero,boss)){
-            fight(hero,boss);
+        if(e.getKeyCode() == KeyEvent.VK_SPACE){
+            if(CheckSpace.isSamePosForFight(hero,boss)){
+                fight(hero,boss);
+            }else{
+                for (Skeleton skeleton : horde) {
+                    if (CheckSpace.isSamePosForFight(hero, skeleton)) {
+                        fight(hero, skeleton);
+                    }
+                }
+            }
+
         }
         if(stepCounter % 2 == 0){
             System.out.println(stepCounter);
             int chance = (int) (Math.random() * ( 5 - 1 ))+1;
-        //    NPCStep(chance,hero.getLevel(),boss);
+            NPCStep(chance,hero.getLevel(),boss);
         }
         stepCounter++;
         // and redraw to have a new picture with the new coordinates
@@ -141,9 +153,11 @@ public class Board extends JComponent implements KeyListener {
         c2.getPosition().setY(600 + numOfDead * 10);
         if(c1 instanceof Hero){
             c1.levelUp();
-            mapLevel++;
-            nextMap(mapLevel);
-            // new Map
+            if(c2 instanceof Boss){
+                mapLevel++;
+                nextMap(mapLevel);
+                // new Map
+            }
         }else{
             // End the game
            System.exit(0);
