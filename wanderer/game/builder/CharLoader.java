@@ -30,7 +30,17 @@ public class CharLoader {
                 skeleton1.draw(graphics);
                 skeleton2.draw(graphics);
                 skeleton3.draw(graphics);
-
         }
 
+        private static void charSetup(Character hero,Character boss,Graphics graphics){
+                PositionedImage heroImage = new PositionedImage(hero.getUrl(), hero.getPosition().getX(), hero.getPosition().getY()); // where do I want to display this
+                PositionedImage badGuy = new PositionedImage(boss.getUrl(), boss.getPosition().getX(),boss.getPosition().getY());
+                badGuy.draw(graphics);
+                heroImage.draw(graphics);
+        }
+
+        public static void charLoader(Character hero,Character boss,Graphics graphics, List<Skeleton> horde, int mapLevel){
+                charSetup(hero,boss,graphics);
+                loadSkeletons(horde,mapLevel,graphics);
+        }
 }

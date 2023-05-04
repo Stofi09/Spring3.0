@@ -56,13 +56,7 @@ public class Board extends JComponent implements KeyListener {
         //       PositionedImage image = new PositionedImage("wanderer-java/img/wall.png", 300, 300); // where do I want to display this
 
         MapBuilder.buildMap(map,wall,graphics,mapLevel);
-       // WallBuilder.buildWall(wall,graphics);
-        PositionedImage heroImage = new PositionedImage(hero.getUrl(), hero.getPosition().getX(), hero.getPosition().getY()); // where do I want to display this
-        heroImage.draw(graphics);
-
-        PositionedImage badGuy = new PositionedImage(boss.getUrl(), boss.getPosition().getX(),boss.getPosition().getY());
-        badGuy.draw(graphics);
-        CharLoader.loadSkeletons(horde,mapLevel,graphics);
+        CharLoader.charLoader(hero,boss,graphics,horde,mapLevel);
 
         // graphics.drawString("Proba", 600, 600);
         ScoreBoard.showResult(graphics,hero);
