@@ -1,11 +1,14 @@
 package com.stofi.Version30.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "address")
 public class Address {
 
+
+    /** Unique id for the address. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -23,6 +26,7 @@ public class Address {
     @Column(name = "country", nullable = false, length = 75)
     private String country;
     /** The user the address is associated with. */
+    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private LocalUser user;

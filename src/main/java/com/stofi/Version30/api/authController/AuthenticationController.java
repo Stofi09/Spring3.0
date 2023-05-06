@@ -4,14 +4,14 @@ import com.stofi.Version30.api.authModel.LoginBody;
 import com.stofi.Version30.api.authModel.LoginResponse;
 import com.stofi.Version30.api.authModel.RegistrationBody;
 import com.stofi.Version30.exception.UserAlreadyExistsException;
+import com.stofi.Version30.model.LocalUser;
 import com.stofi.Version30.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
@@ -51,5 +51,10 @@ public class AuthenticationController {
             response.setJwt(jwt);
             return ResponseEntity.ok(response);
         }
+    }
+
+    @GetMapping("/getUser")
+    public LocalUser getLoggedInUserProfile(@AuthenticationPrincipal LocalUser user) {
+        return user;
     }
 }

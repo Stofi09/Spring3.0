@@ -1,5 +1,6 @@
 package com.stofi.Version30.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -17,7 +18,9 @@ public class LocalUser {
     /** The username of the user. */
     @Column(name = "username", nullable = false, unique = true)
     private String username;
-    /** The encrypted password of the user. */
+    /** The encrypt
+     * ed password of the user. */
+    @JsonIgnore // Needed so, pw won't be sent when the User obj. needs to be returned
     @Column(name = "password", nullable = false, length = 1000)
     private String password;
     /** The email of the user. */
@@ -30,6 +33,7 @@ public class LocalUser {
     @Column(name = "last_name", nullable = false)
     private String lastName;
     /** The addresses associated with the user. */
+    @JsonIgnore // Needed, other wise it is a 500
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();
 
