@@ -53,6 +53,19 @@ public class LoginControllerTest {
             assertThat(jwtToken).isNotBlank();
         }
 
+    @Test
+    public void testFailingLogin() throws JSONException {
+        // Arrange
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> request = new HttpEntity<>("{\"username\":\"username15\",\"password\":\"password123233A\"}", headers);
+
+        // Act
+        ResponseEntity<String> response = restTemplate.postForEntity("/auth/login", request, String.class);
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
         private String parseJWT(String jwtToken) {
             Claims claims = Jwts.parser()
                     .setSigningKey(jwtSecret.getBytes())
